@@ -1,0 +1,52 @@
+task - create automation of ssl certificate alert messages send on slack 
+slack + jenkins + shell script 
+
+step 1 - create jenkins job (freestyle)
+step 2 - go to slack on which channel you have notifications 
+        create webhook of that slack channel
+        goto slack channel-> click on slack channel name -> click on integration -> click on app-> click add apps->install incoming webhook
+        copy link and command example:curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"This is posted to #cloudops_devops and comes from a bot named webhookbot.\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+step 3 - go to jenkins job 
+       you have run that at particular time so you have go to build periodically and set there time eg:H 8 * * * this run everyday at 8am
+step 4 - in jenkins job you have to create shell script so go to build and execute shell 
+       script is here
+       
+       SLACK="https://hooks.slack.com/services/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" #slack link
+CERTIFICATE_FILE=$(mktemp)
+MAX_DAYS=365
+MIN_DAYS=1
+MONTH_REMAINING=30
+CERT='your domain name'
+
+## Read Site Certificate and save as File ###
+echo | openssl s_client -servername ${CERT} -connect ${CERT}:443 2>/dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > $CERTIFICATE_FILE
+
+### Get Full Expiratoin Date ###
+date=$(openssl x509 -in $CERTIFICATE_FILE -enddate -noout | sed "s/.*=\(.*\)/\1/")
+
+
+date_s=$(date -d "${date}" +%s)
+now_s=$(date -d now +%s)
+date_diff=$(( (date_s - now_s) / 86400 ))
+#is there down this is slack command
+#curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of Bizongo.com will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
+
+if [ "$date_diff" -gt $MONTH_REMAINING ] && [ "$date_diff" -lt "$MAX_DAYS" ]
+then
+  curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of Bizongo.com will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
+  
+fi
+
+if [ "$date_diff" -lt $MONTH_REMAINING ] && [ "$date_diff" -eq "$MIN_DAYS" ]
+then
+  curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of Bizongo.com will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
+  
+  curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of Bizongo.com will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
+fi
+       
+
+your this script is run every at 8 pm and in less than 30 day send message twice in the days
+
+
+
+
