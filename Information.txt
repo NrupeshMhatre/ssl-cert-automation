@@ -47,6 +47,7 @@ fi
 
 your this script is run every at 8 pm and in less than 30 day send message twice in the days
 
-
+in dept take reference from
+https://krishnawattamwar.medium.com/bash-script-to-calculate-remaining-days-to-expire-ssl-certs-for-website-87df6ed2ef41
 
 
