@@ -52,7 +52,6 @@ https://krishnawattamwar.medium.com/bash-script-to-calculate-remaining-days-to-e
 
 
 
-
 Below this one for you have list of domain at particular location and you have iterate one by one with iteration this script check ssl certificate date difference and check date with in last 7 days remaining of expiration then send of notifications on slack. This will help you
 If you are running this job in jenkins.make sure your file is saved in jenkins server.
 
