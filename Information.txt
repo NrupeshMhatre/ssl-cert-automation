@@ -5,13 +5,13 @@ step 1 - create jenkins job (freestyle)
 step 2 - go to slack on which channel you have notifications 
         create webhook of that slack channel
         goto slack channel-> click on slack channel name -> click on integration -> click on app-> click add apps->install incoming webhook
-        copy link and command example:curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"This is posted to #cloudops_devops and comes from a bot named webhookbot.\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+        copy link and command example:curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_s\", \"username\": \"webhookbot\", \"text\": \"This is posted to #cloudops_devops and comes from a bot named webhookbot.\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/
 step 3 - go to jenkins job 
        you have run that at particular time so you have go to build periodically and set there time eg:H 8 * * * this run everyday at 8am
 step 4 - in jenkins job you have to create shell script so go to build and execute shell 
        script is here
        
-       SLACK="https://hooks.slack.com/services/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" #slack link
+       SLACK="#slack link"
 CERTIFICATE_FILE=$(mktemp)
 MAX_DAYS=365
 MIN_DAYS=1
@@ -39,9 +39,9 @@ fi
 
 if [ "$date_diff" -lt $MONTH_REMAINING ] && [ "$date_diff" -eq "$MIN_DAYS" ]
 then
-  curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of Bizongo.com will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
+  curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_s\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
   
-  curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_devops\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of Bizongo.com will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
+  curl -X POST --data-urlencode "payload={\"channel\": \"#cloudops_s\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
 fi
        
 
