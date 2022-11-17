@@ -54,14 +54,14 @@ https://krishnawattamwar.medium.com/bash-script-to-calculate-remaining-days-to-e
 
 
 Below this one for you have list of domain at particular location and you have iterate one by one with iteration this script check ssl certificate date difference and check date with in last 7 days remaining of expiration then send of notifications on slack. This will help you
-
+If you are running this job in jenkins.make sure your file is saved in jenkins server.
 
 #!/bin/bash
 SLACK="https://hooks.slack.com/s"
-file="/home/produser/scripts/monitoring/sslcheck/example.txt"
+file="/home/example.txt"
 n=1
 MAX_DAY=7
-MIN_DAY=1
+MIN_DAY=0
 
 CERTIFICATE=$(mktemp)
 while read line; do
@@ -72,9 +72,9 @@ date=$(openssl x509 -in $CERTIFICATE -enddate -noout | sed "s/.*=\(.*\)/\1/")
 date_s=$(date -d "${date}" +%s)
 now_s=$(date -d now +%s)
 date_diff=$(( (date_s - now_s) / 86400 ))
-#echo "$line will expire in $date_diff days"
+echo "$line will expire in $date_diff days"
 
-if [[ $date_diff -lt $MAX_DAYS && $date_diff -eq $MIN_DAYS ]];
+if [[ $date_diff -lt $MAX_DAY && $date_diff -eq $MIN_DAY ]];
 then 
 
 curl -X POST --data-urlencode "payload={\"channel\": \"#testingssl\", \"username\": \"webhookbot\", \"text\": \"SSL Certificate of $line will expire in $date_diff days..\", \"icon_emoji\": \":ghost:\"}" $SLACK
