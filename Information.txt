@@ -52,12 +52,13 @@ https://krishnawattamwar.medium.com/bash-script-to-calculate-remaining-days-to-e
 
 
 
-Below this one for you have list of domain at particular location and you have iterate one by one with iteration this script check ssl certificate date difference and check date with in last 7 days remaining of expiration then send of notifications on slack. This will help you
+Below this one for you have list of A type dns record from route53  and you have iterate one by one with iteration this script check ssl certificate date difference and check date with in last 7 days remaining of expiration then send of notifications on slack. This will help you
 If you are running this job in jenkins.make sure your file is saved in jenkins server.
 
 #!/bin/bash
+aws route53 list-resource-record-sets --hosted-zone-id hostedzoneid --query "ResourceRecordSets[?Type == 'A' ]" | grep Name | sed 's/^.*://' | sed 's/,$//' | sed 's/.$//' | sed 's/.$//' | sed 's/^"//' >/var/lib/jenkins/workspace/ssl-certi/example.txt
 SLACK="https://hooks.slack.com/s"
-file="/home/example.txt"
+file="/var/lib/jenkins/workspace/ssl-certi/example.txt"
 n=1
 MAX_DAY=7
 MIN_DAY=0
